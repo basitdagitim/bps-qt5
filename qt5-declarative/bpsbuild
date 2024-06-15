@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+name="qt5-declarative"
+version="5.15.14"
+description="Qt5 - QtDeclarative component"
+source="https://download.qt.io/official_releases/qt/${version%.*}/${version}/submodules/qtdeclarative-everywhere-opensource-src-${version}.tar.xz"
+depends="qt5-base"
+builddepend="python,vulkan-headers"
+group="dev.qt"
+
+
+setup() {
+export PATH=/usr/bin/qt5:$PATH
+	cd $SOURCEDIR
+	qmake 
+}
+
+
+build () {
+    make
+}
+
+package () {
+    make INSTALL_ROOT="$DESTDIR" install
+}
+
+

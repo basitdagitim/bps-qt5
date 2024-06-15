@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+name="qt5-charts"
+version="5.15.14"
+description="The Qt Sensors API provides access to sensor hardware via QML and C++"
+source="https://download.qt.io/official_releases/qt/${version%.*}/${version}/submodules/qtcharts-everywhere-opensource-src-${version}.tar.xz"
+depends="qt5-base"
+builddepend="qt5-declarative"
+group="dev.qt"
+
+setup() {
+export PATH=/usr/bin/qt5:$PATH
+	cd $SOURCEDIR
+	qmake 
+}
+
+
+build () {
+    make
+}
+
+package () {
+    make INSTALL_ROOT="$DESTDIR" install
+}
+
+
