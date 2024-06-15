@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+name="qt5-base"
+version="5.15.14"
+description="Cross-platform application development framework"
+#source="https://invent.kde.org/qt/qt/qtbase/-/archive/v${version}-lts-lgpl/qtbase-v${version}-lts-lgpl.tar.gz"
+source="https://download.qt.io/official_releases/qt/${version%.*}/${version}/submodules/qtbase-everywhere-opensource-src-${version}.tar.xz"
+depends="sqlite,libX11,fontconfig,mesa,harfbuzz,libXi,openssl,libICE,libpng,libSM,linXext,zlib"
+builddepend="bison,flex,freedts,gperf,gtk3,hicolor-icon-theme,icu,xcb-util,xcb-util-image,xcb-util-keysyms,xcb-util-renderutil,xcb-util-wm,xdg-util"
+group="dev.qt"
+
+setup () {
+	cd $SOURCEDIR
+	./configure                                      \
+		-confirm-license                            \
+		-opensource                                 \
+		-prefix /usr                                \
+		-libdir /usr/lib64 \
+		-bindir         /usr/bin/qt5                \
+		-plugindir      /usr/lib64/qt5/plugins        \
+		-importdir      /usr/lib64/qt5/imports        \
+		-headerdir      /usr/include/qt5            \
+		-datadir        /usr/share/qt5              \
+		-docdir         /usr/share/doc/qt5          \
+		-translationdir /usr/share/qt5/translations \
+		-examplesdir    /usr/share/doc/qt5/examples \
+		-sysconfdir /etc/xdg                        \
+		-dbus-linked                                \
+		-openssl-linked                             \
+		-system-harfbuzz                            \
+		-system-sqlite                              \
+		-nomake examples                            \
+		-no-rpath                                   \
+		-no-mimetype-database \
+		-no-use-gold-linker \
+		-no-reduce-relocations \
+		-no-strip \
+		-ltcg
+		-syslog
+}
+
+build () {
+    make
+}
+
+package () {
+    make install  INSTALL_ROOT=$DESTDIR
+}
+
