@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+name="qt6-base"
+version="6.7.0"
+description="A cross-platform application and UI framework"
+source="https://download.qt.io/archive/qt/${version%.*}/${version}/submodules/qtbase-everywhere-src-${version}.tar.xz"
+depends="sqlite,libX11,fontconfig,mesa,harfbuzz,libXi,openssl,double-conversion libproxy,xcb-util-cursor,xcb-util-wm,xcb-util-keysyms"
+builddepend="vulkan-headers"
+group="dev.qt"
+
+
+setup () {
+	cd $SOURCEDIR
+	
+	cmake -B $BUILDDIR -G Ninja -Wno-dev \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
+		-DINSTALL_BINDIR=bin/qt6 \
+		-DINSTALL_LIBDIR=/usr/lib64 \
+		-DINSTALL_LIBEXECDIR=lib64/qt6 \
+		-DINSTALL_PUBLICBINDIR=/usr/bin/qt6 \
+		-DINSTALL_DOCDIR=share/doc/qt6 \
+		-DINSTALL_ARCHDATADIR=lib64/qt6 \
+		-DINSTALL_DATADIR=share/qt6 \
+		-DINSTALL_INCLUDEDIR=include/qt6 \
+		-DINSTALL_MKSPECSDIR=lib64/qt6/mkspecs \
+		-DINSTALL_EXAMPLESDIR=share/doc/qt6/examples \
+		-DQT_FEATURE_journald=OFF \
+		-DQT_FEATURE_opengles3=ON \
+		-DFEATURE_libproxy=ON \
+		-DFEATURE_openssl_linked=ON \
+		-DFEATURE_system_sqlite=ON \
+		-DFEATURE_system_xcb_xinput=ON \
+		-DFEATURE_no_direct_extern_access=ON \
+		-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
+		-DCMAKE_MESSAGE_LOG_LEVEL=STATUS \
+		-DQT_FEATURE_reduce_relocations=OFF \
+		-DQT_FEATURE_vulkan=ON \
+		-DQT_FEATURE_xcb=ON
+
+}
+
+build () {
+    cmake --build $BUILDDIR
+}
+
+package () {
+    DESTDIR=$DESTDIR cmake --install $BUILDDIR
+    install -d -m755 "$DESTDIR"/usr/include/qt6xcb-private/{gl_integrations,nativepainting}
+    cp -r src/plugins/platforms/xcb/*.h "$DESTDIR"/usr/include/qt6xcb-private/
+    cp -r src/plugins/platforms/xcb/gl_integrations/*.h "$DESTDIR"/usr/include/qt6xcb-private/gl_integrations/
+    cp -r src/plugins/platforms/xcb/nativepainting/*.h "$DESTDIR"/usr/include/qt6xcb-private/nativepainting/
+
+}
+
+

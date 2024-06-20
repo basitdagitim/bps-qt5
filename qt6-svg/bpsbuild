@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+name="qt6-svg"
+version="6.7.0"
+description="Classes for displaying the contents of SVG files"
+source="https://download.qt.io/archive/qt/${version%.*}/${version}/submodules/qtsvg-everywhere-src-${version}.tar.xz"
+depends="qt6-base"
+builddepend="cmake"
+group="dev.qt"
+
+
+setup () {
+	cd $SOURCEDIR
+	
+	cmake -B $BUILDDIR -G Ninja \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_MESSAGE_LOG_LEVEL=STATUS
+		
+
+
+}
+
+build () {
+    cmake --build $BUILDDIR
+}
+
+package () {
+    DESTDIR=$DESTDIR cmake --install $BUILDDIR
+}
+
+

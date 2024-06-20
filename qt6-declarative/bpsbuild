@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+name="qt6-declarative"
+version="6.7.0"
+description="Qt6 - QtDeclarative component"
+source="https://download.qt.io/archive/qt/${version%.*}/${version}/submodules/qtdeclarative-everywhere-src-${version}.tar.xz"
+depends="qt6-base"
+builddepend="python,vulkan-headers,qt6-languageserver,qt6-shadertools"
+group="dev.qt"
+
+
+setup () {
+	export CXXFLAGS+=" -ffat-lto-objects"
+	cd $SOURCEDIR
+	
+	cmake -B $BUILDDIR -G Ninja \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_MESSAGE_LOG_LEVEL=STATUS
+		
+
+
+}
+
+build () {
+    cmake --build $BUILDDIR
+}
+
+package () {
+    DESTDIR=$DESTDIR cmake --install $BUILDDIR
+}
+
+

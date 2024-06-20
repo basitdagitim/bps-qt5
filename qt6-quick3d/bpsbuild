@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+name="qt6-quick3d"
+version="6.7.0"
+description="Qt module and API for defining 3D content in Qt Quick"
+source="https://download.qt.io/archive/qt/${version%.*}/${version}/submodules/qtquick3d-everywhere-src-${version}.tar.xz"
+depends="qt6-base,qt6-declarative,qt6-quicktimeline,qt6-shadertools,zlib"
+builddepend="cmake"
+group="dev.qt"
+
+
+setup () {
+	cd $SOURCEDIR
+	
+	cmake -B $BUILDDIR -G Ninja \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_MESSAGE_LOG_LEVEL=STATUS
+		
+
+
+}
+
+build () {
+    cmake --build $BUILDDIR
+}
+
+package () {
+    DESTDIR=$DESTDIR cmake --install $BUILDDIR
+}
+
+

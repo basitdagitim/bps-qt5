@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+name="qt6-5compat"
+version="6.7.0"
+description="Module that contains unsupported Qt 5 APIs"
+source="https://download.qt.io/archive/qt/${version%.*}/${version}/submodules/qt5compat-everywhere-src-${version}.tar.xz"
+depends="qt6-base,icu,qt6-shadertools"
+builddepend="cmake,qt6-declarative"
+group="dev.qt"
+
+
+setup () {
+	cd $SOURCEDIR
+	
+	cmake -B $BUILDDIR -G Ninja \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_MESSAGE_LOG_LEVEL=STATUS
+		
+
+
+}
+
+build () {
+    cmake --build $BUILDDIR
+}
+
+package () {
+    DESTDIR=$DESTDIR cmake --install $BUILDDIR
+}
+
+

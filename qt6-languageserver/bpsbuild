@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+name="qt6-languageserver"
+version="6.7.0"
+description="Qt implementation of the Language Server Protocol"
+source="https://download.qt.io/archive/qt/${version%.*}/${version}/submodules/qtlanguageserver-everywhere-src-${version}.tar.xz"
+depends="qt6-base"
+builddepend="cmake"
+group="dev.qt"
+
+
+setup () {
+	cd $SOURCEDIR
+	
+	cmake -B $BUILDDIR -G Ninja \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_BUILD_TYPE=RelWithDebInfo
+		
+
+
+}
+
+build () {
+    cmake --build $BUILDDIR
+}
+
+package () {
+    DESTDIR=$DESTDIR cmake --install $BUILDDIR
+}
+
+

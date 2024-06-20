@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+name="qt5-tools"
+version="5.15.14"
+description="A cross-platform application and UI framework"
+source="https://download.qt.io/official_releases/qt/${version%.*}/${version}/submodules/qttools-everywhere-opensource-src-${version}.tar.xz"
+depends="qt5-base,hicolor-icon-theme"
+builddepend="qt5-declarative,vulkan-headers,llvm,clang"
+group="dev.qt"
+
+setup() {
+export PATH=/usr/bin/qt5:$PATH
+cp -prvf $PACKAGEDIR/files/ /tmp/bps/build/
+
+	cd $SOURCEDIR
+	qmake 
+}
+
+build () {
+    make
+}
+
+package () {
+    make install INSTALL_ROOT=$DESTDIR
+    
+  for icon in src/linguist/linguist/images/icons/linguist-*-32.png ; do
+    size=$(echo $(basename ${icon}) | cut -d- -f2)
+    install -p -D -m644 ${icon} \
+      "${DESTDIR}/usr/share/icons/hicolor/${size}x${size}/apps/linguist.png"
+  done
+
+  install -D -m644 src/assistant/assistant/images/assistant.png \
+    "${DESTDIR}/usr/share/icons/hicolor/32x32/apps/assistant.png"
+  install -D -m644 src/assistant/assistant/images/assistant-128.png \
+    "${DESTDIR}/usr/share/icons/hicolor/128x128/apps/assistant.png"
+  install -D -m644 src/designer/src/designer/images/designer.png \
+    "${DESTDIR}/usr/share/icons/hicolor/128x128/apps/QtProject-designer.png"
+  install -D -m644 src/qdbus/qdbusviewer/images/qdbusviewer.png \
+    "${DESTDIR}/usr/share/icons/hicolor/32x32/apps/qdbusviewer.png"
+  install -D -m644 src/qdbus/qdbusviewer/images/qdbusviewer-128.png \
+    "${DESTDIR}/usr/share/icons/hicolor/128x128/apps/qdbusviewer.png"
+  install -d "${DESTDIR}/usr/share/applications"
+  install -m644 ../files/{linguist,designer,assistant,qdbusviewer}.desktop \
+    "${DESTDIR}/usr/share/applications/"
+
+}
+
